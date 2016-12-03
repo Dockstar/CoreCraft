@@ -50,10 +50,15 @@ namespace CoreCraft.Controllers
             };
 
 
-            var shitstain = client.Containers.CreateContainerAsync(new CreateContainerParameters()
+
+            //This is a create statement not run
+            var CreateReference = client.Containers.CreateContainerAsync(new CreateContainerParameters()
             {
-                Name = "Nginx",
-                Image = "nginx",
+                AttachStderr = false,
+                AttachStdin = false,
+                AttachStdout = false,
+                Name = "Apachereference",
+                Image = "eboraas/apache",
                 HostConfig = new HostConfig()
                 {
                     RestartPolicy = new RestartPolicy()
@@ -63,18 +68,23 @@ namespace CoreCraft.Controllers
                     AutoRemove = true,
 
                 }
-
             });
 
             try
             {
-                await shitstain;
+                await CreateReference;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
 
+            var Container = CreateReference.Result.ID;
+
+            client.Containers.StartContainerAsync(Container, new ContainerStartParameters()
+            {
+
+            });
             return View(ViewModel);
         }
     }
