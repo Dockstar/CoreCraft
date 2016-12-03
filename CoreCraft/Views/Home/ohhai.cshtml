@@ -1,0 +1,26 @@
+﻿@using System.Linq
+@using Docker.DotNet.Models
+@model CoreCraft.Models.Images.ImageListVm
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>title</title>
+</head>
+<body>
+<table>
+  @foreach (ImagesListResponse i in Model.Images)
+  {
+      <tr>@i.RepoTags.FirstOrDefault().ToString()</tr>
+  }
+</table>
+<div>
+
+</div>
+</body>
+</html>

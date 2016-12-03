@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Microsoft.AspNetCore.Mvc;
+using CoreCraft.Models.Images;
 
 namespace CoreCraft.Controllers
 {
@@ -37,18 +38,44 @@ namespace CoreCraft.Controllers
 
         public async Task<IActionResult> ohhai()
         {
-            Uri target = new Uri("http://swarm01.eastus.cloudapp.azure.com:2736");
+            Uri target = new Uri("http://127.0.0.1:2376");
             DockerClient client = new DockerClientConfiguration(target).CreateClient();
 
-            var containers = client.Containers.ListContainersAsync(
-                new ContainersListParameters()
+            ImageListVm ViewModel = new ImageListVm()
+            {
+                Images = await client.Images.ListImagesAsync(new ImagesListParameters()
                 {
                     All = true,
-                }
-            );
+                })
+            };
 
-            var targetcontainerstats = await client.Containers.GetContainerStatsAsync("mellow_mushroom", new ContainerStatsParameters() {Stream = false},new CancellationToken());
-            return View();
+
+            var shitstain = client.Containers.CreateContainerAsync(new CreateContainerParameters()
+            {
+                Name = "Nginx",
+                Image = "nginx",
+                HostConfig = new HostConfig()
+                {
+                    RestartPolicy = new RestartPolicy()
+                    {
+                        MaximumRetryCount = 500
+                    },
+                    AutoRemove = true,
+
+                }
+
+            });
+
+            try
+            {
+                await shitstain;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return View(ViewModel);
         }
     }
 }
