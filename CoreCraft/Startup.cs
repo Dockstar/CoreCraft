@@ -40,11 +40,11 @@ namespace CoreCraft
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<CoreCraftContext>(options =>
+                    options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddEntityFrameworkStores<CoreCraftContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
